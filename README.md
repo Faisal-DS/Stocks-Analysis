@@ -1,175 +1,149 @@
 # Stock Market Analysis Using Big Data Storage and Processing
 
-This is the repository for Big Data Project - Stock Market Analysis Using Big Data Storage and Processing System
+## 1. Project Overview
+This project was developed as a semester project for **COMP-548DL – Big Data Management and Processing**, under the supervision of **Dr. Demetris Trihinas**.
 
-## Project Overview
+The objective of the project is to design and implement an **end-to-end Big Data analytics pipeline** for financial time-series data. The focus of the work is on **Big Data storage, ingestion, management, and distributed processing**, while financial market data is used as a realistic and scalable application domain.
 
-This project was developed as a semester project for COMP-548DL – Big Data Management and Processing, under the supervision of Dr. Demetris Trihinas.
+Rather than building financial trading or prediction models, the project demonstrates how modern Big Data technologies can be used to persistently store, process, and analyze continuously growing datasets in a reproducible and scalable manner.
 
-The objective of the project is to design and implement an end-to-end Big Data analytics pipeline for financial time-series data, demonstrating persistent storage, scalable data ingestion, and distributed processing using modern Big Data technologies.
+---
 
-The system focuses on U.S. equity market data and illustrates how raw market data can be transformed into analytical insights without relying on in-memory or spreadsheet-style workflows.
+## 2. Big Data Challenges Addressed
+The project explicitly addresses the following Big Data dimensions:
 
-## Big Data Challenges Addressed
+- **Volume**:  
+  Multi-year historical market data is persistently stored across multiple assets, resulting in a growing time-series dataset.
 
-The project explicitly addresses two key Big Data dimensions:
+- **Velocity**:  
+  Near-real-time market data is ingested periodically, simulating streaming-style data arrival and incremental dataset growth.
 
-Volume: Multi-year historical price data accumulated across multiple equity instruments.
+The **veracity** dimension is intentionally excluded from the scope of this project, in accordance with the course focus and instructor guidance.
 
-Velocity: Periodic ingestion of near-real-time quote snapshots simulating continuous data arrival.
+---
 
-Traditional in-memory tools (e.g. pandas-based pipelines) are intentionally avoided for ingestion and analytics due to scalability limitations.
-The veracity dimension is intentionally excluded from scope in accordance with course guidance.
+## 3. Dataset and Assumptions
+- **Asset Universe**:  
+  AAPL, MSFT, NVDA, AMZN, TSLA, APP, SMCI, SPY
 
-# Dataset and Assumptions
-## Asset Universe
+- **Market**:  
+  U.S. equity markets (NYSE and NASDAQ)
 
-The analysis focuses on the following eight U.S. equity instruments:
+- **Time Range**:  
+  Approximately three years of daily historical data, plus periodic near-real-time quote snapshots
 
-AAPL, MSFT, NVDA, AMZN, TSLA, APP, SMCI, SPY
+- **Time Zone**:  
+  All timestamps are normalized to UTC to ensure consistency across ingestion and processing stages
 
-This selection includes large-cap stocks, high-growth equities, and a broad-market ETF (SPY) to enable comparative analysis across different market behaviors.
+- **Assumptions**:
+  - Data provided by external APIs is assumed to be structurally valid
+  - The project does not attempt to correct or validate financial data quality (veracity)
 
-## Time and Market Assumptions
+---
 
-Market: U.S. equities (NYSE / NASDAQ)
+## 4. System Architecture (Big Data Pipeline)
+The project follows a modular Big Data architecture:
 
-Timezone: All timestamps normalized to UTC
+1. **Data Ingestion**
+   - Batch ingestion of historical daily OHLCV data
+   - Periodic ingestion of near-real-time quote data (velocity simulation)
 
-Historical coverage: ~3 years of daily data
+2. **Persistent Storage**
+   - MongoDB Atlas is used as the central storage layer
+   - Raw and derived datasets are stored persistently with enforced indexing and schema keys
 
-Intraday data: Periodic quote snapshots
+3. **Distributed Processing**
+   - Apache Spark (PySpark) is used to perform distributed analytics on persisted data
+   - Spark reads from and writes back to MongoDB, acting as a scalable processing layer
 
-# System Architecture
+4. **Visualization**
+   - Analytical outputs are visualized to illustrate trends, volatility, and technical indicators
 
-The project follows a layered Big Data architecture:
+This architecture avoids in-memory or spreadsheet-style workflows and mirrors real-world Big Data analytics pipelines.
 
-Data Ingestion → MongoDB Atlas → Apache Spark → Visualization
+---
 
-Technologies Used
+## 5. Data Model and Storage Design
+A MongoDB database named `Stocks` is used, with the following collections:
 
-MongoDB Atlas – Persistent NoSQL storage
+- `raw_prices`  
+  Immutable raw market data (daily bars and quote snapshots)
 
-Apache Spark (PySpark) – Distributed processing
+- `daily_agg`  
+  Derived daily aggregates and rolling statistics
 
-Python – Ingestion and orchestration
+- `indicators`  
+  Technical indicators (e.g., RSI)
 
-Jupyter Notebooks – Execution and visualization
+- `spark_risk_return`  
+  Cross-sectional analytics produced by Apache Spark
 
-# Data Model and Storage Design
+- `spark_monthly_returns`  
+  Monthly aggregated returns produced by Apache Spark
 
-All data is stored persistently in MongoDB Atlas using a structured and scalable data model:
+Compound unique indexes on `(symbol, timestamp, interval)` ensure idempotent ingestion, prevent duplicates, and support efficient querying.
 
-raw_prices – Immutable raw market data (daily bars and quote snapshots)
+---
 
-daily_agg – Daily aggregates and rolling statistics
+## 6. Data Ingestion and Validation
+- Historical daily data is ingested in batch mode
+- Near-real-time quote data is ingested periodically to demonstrate velocity handling
+- Idempotent upserts ensure safe re-execution of ingestion jobs
+- Validation checks confirm:
+  - Consistent record counts across assets
+  - No duplicate records
+  - Financial sanity of stored values
 
-indicators – Technical indicators (e.g. RSI-14)
+---
 
-spark_risk_return – Spark-derived risk/return metrics
+## 7. Distributed Processing with Apache Spark
+Apache Spark is used to demonstrate distributed analytics on persistently stored data.
 
-spark_monthly_returns – Spark-derived monthly returns
+Spark performs:
+- Joins across MongoDB collections
+- Per-symbol risk and return summarization
+- Monthly return aggregation using window functions
 
-Compound unique indexes on (symbol, timestamp, interval) enforce data integrity, prevent duplicates, and support idempotent ingestion.
+All Spark results are written back to MongoDB Atlas, ensuring reproducibility and avoiding transient, in-memory-only computation.
 
-# Data Ingestion and Processing
-Batch Ingestion (Volume)
+This step highlights the benefit of separating **data storage (MongoDB)** from **data processing (Spark)** in scalable analytics systems.
 
-Historical daily OHLCV data ingested for all symbols
+---
 
-Stored persistently with interval = "1day"
+## 8. Analytics and Insights
+The pipeline enables analytics such as:
+- Risk vs. return comparison across assets
+- Price trends with moving averages
+- Rolling volatility analysis
+- RSI-based momentum interpretation
 
-Velocity-Oriented Ingestion
+These insights are derived from Big Data processing rather than ad-hoc, notebook-only analysis.
 
-Periodic polling of quote-level data
+---
 
-Each snapshot stored with interval = "quote"
+## 9. Proposal Alignment and Deviations
+The project remains aligned with the original proposal in terms of objectives and scope.  
+Minor deviations include the use of alternative data sources for historical data due to API limitations. These changes were made to ensure reliable ingestion while preserving the Big Data focus of the project.
 
-Data Validation and Cleaning
+---
 
-Duplicate prevention via unique indexes
+## 10. Reproducibility Instructions
+To reproduce the project:
+1. Clone the repository
+2. Create a `.env` file with required API keys and MongoDB Atlas credentials
+3. Execute the notebooks in order (Step 3 → Step 7)
+4. No code modifications are required
 
-Validation of date ranges and record counts
+All results are reproducible using the provided code and configuration.
 
-Financial sanity checks (positive prices, valid volumes)
+---
 
-Distributed Processing with Apache Spark
+## 11. Project Video
+A short demonstration video illustrating the system architecture, data flow, and analytical outputs is available on YouTube:
 
-Apache Spark is used to perform distributed analytics on persistently stored data, including:
+*(Link to be added)*
 
-Distributed joins across collections
+---
 
-Per-symbol risk and return analysis
-
-Monthly return aggregation using window functions
-
-All Spark outputs are written back to MongoDB, ensuring reproducibility and reuse.
-
-# Analytics and Insights
-
-The project produces several analytical insights, including:
-
-Price trends using moving averages (SMA-20, SMA-50)
-
-Risk analysis using rolling volatility
-
-Momentum analysis using RSI-14
-
-Cross-asset risk–return comparisons
-
-Monthly performance comparisons
-
-These insights are visualized in the final stage of the project.
-
-# Proposal Alignment and Deviations
-
-The final implementation is strongly aligned with the initial project proposal. Minor, justified deviations include:
-
-Introduction of Stooq as a historical data source due to Alpha Vantage free-tier limitations.
-
-Execution of Spark in local mode due to environment constraints.
-
-Additional analytics (risk/return and monthly returns) beyond the original scope.
-
-All deviations were documented and motivated by practical considerations and do not affect the project’s core objectives.
-
-# Reproducibility Instructions
-## Requirements
-
-Python 3.10+
-
-MongoDB Atlas account
-
-Java 17 (for Spark)
-
-Required Python libraries (see notebooks)
-
-## Steps to Reproduce
-
-Clone this repository
-
-Create a .env file with:
-
-MongoDB connection string
-
-Install required dependencies
-
-Execute notebooks in the following order:
-
-Step 3 – Data Ingestion
-
-Step 6 – Distributed Processing
-
-Step 7 – Visualization
-
-No code modifications are required to reproduce results.
-
-# Project Video
-
-A short demonstration video (≤ 5 minutes) illustrating the system architecture, analytics, and insights is available on YouTube:
-
-[YouTube Link – to be added]
-
-# Final Notes
-
-This project demonstrates how Big Data technologies can be applied to financial analytics in a scalable, reproducible, and industry-aligned manner, fully satisfying the objectives of the COMP-548DL course.
+## Repository
+https://github.com/Faisal-DS/Stocks-Analysis
