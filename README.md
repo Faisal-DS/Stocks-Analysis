@@ -9,13 +9,20 @@ Rather than building financial trading or prediction models, the project demonst
 
 ---
 
+## Quick Navigation
+- [Project Scope and Dataset Plan](docs/scope.md)
+- [Data Model and Indexing Strategy](docs/data_model.md)
+- [Reproducibility Instructions](#10-reproducibility-instructions)
+
+---
+
 ## 2. Big Data Challenges Addressed
 The project explicitly addresses the following Big Data dimensions:
 
-- **Volume**:  
-  Multi-year historical market data is persistently stored across multiple assets, resulting in a growing time-series dataset.
+- **Volume**  
+  Multi-year historical market data is persistently stored across multiple assets, resulting in a continuously growing time-series dataset.
 
-- **Velocity**:  
+- **Velocity**  
   Near-real-time market data is ingested periodically, simulating streaming-style data arrival and incremental dataset growth.
 
 The **veracity** dimension is intentionally excluded from the scope of this project, in accordance with the course focus and instructor guidance.
@@ -37,7 +44,7 @@ The **veracity** dimension is intentionally excluded from the scope of this proj
 
 - **Assumptions**:
   - Data provided by external APIs is assumed to be structurally valid
-  - The project does not attempt to correct or validate financial data quality (veracity)
+  - The project does not attempt to validate or correct financial data quality (veracity)
 
 ---
 
@@ -66,20 +73,11 @@ This architecture avoids in-memory or spreadsheet-style workflows and mirrors re
 ## 5. Data Model and Storage Design
 A MongoDB database named `Stocks` is used, with the following collections:
 
-- `raw_prices`  
-  Immutable raw market data (daily bars and quote snapshots)
-
-- `daily_agg`  
-  Derived daily aggregates and rolling statistics
-
-- `indicators`  
-  Technical indicators (e.g., RSI)
-
-- `spark_risk_return`  
-  Cross-sectional analytics produced by Apache Spark
-
-- `spark_monthly_returns`  
-  Monthly aggregated returns produced by Apache Spark
+- `raw_prices` – Immutable raw market data (daily bars and quote snapshots)
+- `daily_agg` – Derived daily aggregates and rolling statistics
+- `indicators` – Technical indicators (e.g., RSI)
+- `spark_risk_return` – Cross-sectional analytics produced by Apache Spark
+- `spark_monthly_returns` – Monthly aggregated returns produced by Apache Spark
 
 Compound unique indexes on `(symbol, timestamp, interval)` ensure idempotent ingestion, prevent duplicates, and support efficient querying.
 
@@ -104,9 +102,7 @@ Spark performs:
 - Per-symbol risk and return summarization
 - Monthly return aggregation using window functions
 
-All Spark results are written back to MongoDB Atlas, ensuring reproducibility and avoiding transient, in-memory-only computation.
-
-This step highlights the benefit of separating **data storage (MongoDB)** from **data processing (Spark)** in scalable analytics systems.
+All Spark results are written back to MongoDB Atlas, ensuring reproducibility and avoiding transient, in-memory-only computation. Spark is used exclusively for scalable data processing and analytics, while visualization is treated as a downstream, non-Big-Data concern.
 
 ---
 
@@ -122,8 +118,7 @@ These insights are derived from Big Data processing rather than ad-hoc, notebook
 ---
 
 ## 9. Proposal Alignment and Deviations
-The project remains aligned with the original proposal in terms of objectives and scope.  
-Minor deviations include the use of alternative data sources for historical data due to API limitations. These changes were made to ensure reliable ingestion while preserving the Big Data focus of the project.
+The project remains aligned with the original proposal in terms of objectives and scope. Minor deviations include the use of alternative data sources for historical data due to API limitations. These changes were made to ensure reliable ingestion while preserving the Big Data focus of the project.
 
 ---
 
@@ -131,15 +126,23 @@ Minor deviations include the use of alternative data sources for historical data
 To reproduce the project:
 1. Clone the repository
 2. Create a `.env` file with required API keys and MongoDB Atlas credentials
-3. Execute the notebooks in order (Step 3 → Step 7)
+3. Execute the notebooks in order
 4. No code modifications are required
 
-All results are reproducible using the provided code and configuration.
+### Notebooks
+- **Step3_Ingestion.ipynb**  
+  Batch and velocity data ingestion with idempotent writes to MongoDB Atlas
+
+- **Step6_Distributed_Analytics.ipynb**  
+  Distributed analytics using Apache Spark on persisted datasets
+
+- **Step7_Visualization.ipynb**  
+  Visualization of persisted analytics results (read-only, visualization layer)
 
 ---
 
 ## 11. Project Video
-A short demonstration video illustrating the system architecture, data flow, and analytical outputs is available on YouTube:
+A short demonstration video illustrating the system architecture, data flow, and analytical outputs will be published on YouTube.
 
 *(Link to be added)*
 
