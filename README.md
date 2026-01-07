@@ -123,11 +123,25 @@ The project remains aligned with the original proposal in terms of objectives an
 ---
 
 ## 10. Reproducibility Instructions
-To reproduce the project:
+
+This project is fully reproducible without modifying any code.
+
+### Prerequisites
+- Python 3.10+
+- Apache Spark 3.x
+- Java 8 or 11
+- MongoDB Atlas account
+- Alpha Vantage API key
+
+### Steps to Reproduce
 1. Clone the repository
-2. Create a `.env` file with required API keys and MongoDB Atlas credentials
-3. Execute the notebooks in order
-4. No code modifications are required
+2. Create a `.env` file using `.env.example` as a template and provide:
+   - MongoDB Atlas connection string
+   - Alpha Vantage API key
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+
 
 ### Notebooks
 - **Step3_Ingestion.ipynb**  
