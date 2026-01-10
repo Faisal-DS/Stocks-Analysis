@@ -1,7 +1,7 @@
 # Stock Market Analysis Using Big Data Storage and Processing
 
 ## 1. Project Overview
-This project was developed as a semester project for **COMP-548DL – Big Data Management and Processing**, under the supervision of **Dr. Demetris Trihinas**.
+This project is developed as a semester project for **COMP-548DL – Big Data Management and Processing**, assigned by **Dr. Demetris Trihinas**.
 
 The objective of the project is to design and implement an **end-to-end Big Data analytics pipeline** for financial time-series data. The focus of the work is on **Big Data storage, ingestion, management, and distributed processing**, while financial market data is used as a realistic and scalable application domain.
 
@@ -25,8 +25,6 @@ The project explicitly addresses the following Big Data dimensions:
 - **Velocity**  
   Near-real-time market data is ingested periodically, simulating streaming-style data arrival and incremental dataset growth.
 
-The **veracity** dimension is intentionally excluded from the scope of this project, in accordance with the course focus and instructor guidance.
-
 ---
 
 ## 3. Dataset and Assumptions
@@ -44,7 +42,7 @@ The **veracity** dimension is intentionally excluded from the scope of this proj
 
 - **Assumptions**:
   - Data provided by external APIs is assumed to be structurally valid
-  - The project does not attempt to validate or correct financial data quality (veracity)
+  - The project does not attempt to validate or correct financial data quality (hence veracity dimension is not addressed)
 
 ---
 
@@ -52,7 +50,7 @@ The **veracity** dimension is intentionally excluded from the scope of this proj
 The project follows a modular Big Data architecture:
 
 1. **Data Ingestion**
-   - Batch ingestion of historical daily OHLCV data
+   - Batch ingestion of historical daily OHLCV data (OHLCV data stands for Open, High, Low, Close, and Volume, representing a financial asset's trading activity over a specific time period)
    - Periodic ingestion of near-real-time quote data (velocity simulation)
 
 2. **Persistent Storage**
@@ -64,9 +62,7 @@ The project follows a modular Big Data architecture:
    - Spark reads from and writes back to MongoDB, acting as a scalable processing layer
 
 4. **Visualization**
-   - Analytical outputs are visualized to illustrate trends, volatility, and technical indicators
-
-This architecture avoids in-memory or spreadsheet-style workflows and mirrors real-world Big Data analytics pipelines.
+   - Analytical outputs are visualized to illustrate trends, volatility, and technical indicators via Jupyter Notebooks
 
 ---
 
