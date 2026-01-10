@@ -1,36 +1,98 @@
 # Project Scope & Dataset Plan
 
 ## Asset Universe
-Symbols (8): AAPL, MSFT, NVDA, AMZN, TSLA, APP, SMCI, SPY
+The project analyzes a fixed universe of U.S. equity instruments:
+
+**Symbols (8):**  
+AAPL, MSFT, NVDA, AMZN, TSLA, APP, SMCI, SPY
+
+These assets were selected to provide diversity in market capitalization, volatility, and trading behavior while remaining manageable.
+
+---
 
 ## Data Sources
-Primary provider: Alpha Vantage API (JSON time-series).
-Fallback provider (only if needed): Yahoo Finance.
+
+### Historical Data (Batch Ingestion)
+- **Primary Provider:** Stooq
+- **Data Type:** Daily OHLCV (Open, High, Low, Close, Volume)
+- **Format:** CSV (programmatically ingested)
+- **Rationale:**  
+  Stooq provides stable and freely accessible historical market data suitable for reproducible batch ingestion and long-horizon analysis.
+
+### Near-Real-Time Data (Velocity Simulation)
+- **Provider:** Alpha Vantage API
+- **Endpoint:** GLOBAL_QUOTE
+- **Data Type:** Latest quote snapshot per symbol
+- **Ingestion Pattern:** Periodic polling
+- **Rationale:**  
+  Periodic quote ingestion simulates data velocity without introducing the operational complexity of a full streaming infrastructure.
+
+---
 
 ## Datasets
-1) Daily Historical Prices
-- Frequency: 1 day
-- Coverage: 3 years
-- Purpose: long-horizon trend analysis, daily aggregation, long-term volatility
 
-2) Intraday Prices
-- Frequency: 5-minute bars
-- Ingestion rate: every 5 minutes
-- Purpose: velocity demonstration, intraday patterns, short-term volatility, near-real-time updates
+### Daily Historical Prices
+- **Frequency:** 1 day
+- **Coverage:** Approximately 3 years per symbol
+- **Purpose:**  
+  - Long-horizon trend analysis  
+  - Daily aggregation  
+  - Rolling volatility and return computation  
+
+### Quote Snapshots (Velocity Dataset)
+- **Frequency:** Periodic polling (simulated streaming)
+- **Storage Model:** Historical snapshots (append-only)
+- **Purpose:**  
+  - Demonstrate velocity-oriented ingestion  
+  - Incremental dataset growth  
+  - Near-real-time data persistence  
+
+> Note: Intraday bar data (e.g., 5-minute intervals) is intentionally excluded to keep the focus on Big Data system design rather than high-frequency trading analysis.
+
+---
 
 ## Time & Market Assumptions
-- Market: US equities
-- Timestamp storage: UTC (all records normalized to UTC)
+- **Market:** U.S. equities (NYSE and NASDAQ)
+- **Timestamp Storage:**  
+  All timestamps are normalized and stored in **UTC** to ensure consistency across ingestion, processing, and analytics stages.
+
+---
 
 ## Big Data Dimensions (In Scope)
-- Volume: persistent accumulation of multi-symbol time-series over years
-- Velocity: repeated intraday ingestion every 5 minutes
-- Veracity: explicitly out of scope
 
-## Planned Outputs (Produced via Spark and stored back to MongoDB)
-- daily_agg collection: per-symbol daily OHLC and volume summaries
-- indicators collection: moving averages (MA 5/20/50), rolling volatility, intraday pattern aggregates
+- **Volume:**  
+  Persistent accumulation of multi-year historical time-series data across multiple symbols.
+
+- **Velocity:**  
+  Periodic ingestion of near-real-time quote snapshots, simulating continuous data arrival and incremental dataset growth.
+
+---
+
+## Planned Outputs (Persisted to MongoDB)
+
+The following datasets are produced and stored persistently:
+
+- **`raw_prices` collection:**  
+  Immutable storage of all ingested historical prices and quote snapshots.
+
+- **`daily_agg` collection:**  
+  Daily aggregates including returns, log returns, moving averages, and rolling volatility.
+
+- **`indicators` collection:**  
+  Technical indicators such as RSI computed via aggregation pipelines.
+
+- **Spark Outputs:**  
+  - `spark_risk_return`: Per-symbol risk and return summaries  
+  - `spark_monthly_returns`: Monthly aggregated returns  
+
+All outputs are written back to MongoDB Atlas to ensure reproducibility.
+
+---
 
 ## Scale Statement
-The pipeline is designed to scale to hundreds of symbols and longer intraday histories without architectural changes
-(persistent storage + distributed processing remain the same).
+The pipeline is designed to scale horizontally to:
+- Additional symbols
+- Longer historical time ranges
+- Increased quote ingestion frequency  
+
+without requiring architectural changes. Persistent NoSQL storage and distributed processing via Apache Spark remain the core scalability mechanisms.
