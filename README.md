@@ -122,14 +122,77 @@ The project remains aligned with the original proposal in terms of objectives an
 
 This project is fully reproducible without modifying any code.
 
-### Prerequisites
+## 11. Project Workflow and Step Mapping
+
+This project is organized into **seven logical steps**, each addressing a specific stage of a Big Data analytics pipeline.  
+Not all steps require standalone notebooks; some steps are design- or architecture-focused and are documented directly in this README or supporting documents.
+
+The mapping below explains **where each step is implemented and how it can be reviewed**.
+
+### Step 1: Project Scope and Big Data Framing
+- Defines the problem scope, dataset, and Big Data dimensions (volume and velocity)
+- Documents assumptions and exclusions (veracity)
+- **Artifact:** README.md (Project Overview, Big Data Challenges)
+
+---
+
+### Step 2: Data Modeling and Persistent Storage Design
+- Designs the NoSQL data model and indexing strategy
+- Defines immutable raw ingestion and derived collections
+- **Artifacts:**  
+  - README.md (Data Model and Storage Design)  
+  - docs/data_model.md  
+
+---
+
+### Step 3: Data Ingestion
+- Implements batch ingestion of historical OHLCV data
+- Implements velocity-style ingestion via periodic quote polling
+- Enforces idempotent upserts and indexing
+- Performs initial data validation
+- **Artifact:** notebooks/Step3_Ingestion.ipynb  
+
+---
+
+### Step 4: Data Validation
+- Validates record counts, date ranges, and duplicate prevention
+- Performs financial sanity checks on stored data
+- Implemented as part of the ingestion pipeline
+- **Artifact:** notebooks/Step3_Ingestion.ipynb (validation cells)
+
+---
+
+### Step 5: Feature Engineering
+- Computes derived features using MongoDB aggregation pipelines
+- Persists rolling statistics and indicators into derived collections
+- Separates raw and derived data for reproducibility
+- **Artifact:** README.md (Feature Engineering section)
+
+---
+
+### Step 6: Distributed Processing with Apache Spark
+- Reads persisted MongoDB collections using Spark
+- Performs distributed joins and aggregations
+- Computes risk/return metrics and monthly returns
+- Writes results back to MongoDB Atlas
+- **Artifact:** notebooks/Step6_Distributed_Analytics.ipynb  
+
+---
+
+### Step 7: Visualization
+- Loads Spark-generated outputs for analysis
+- Uses Spark for filtering and pandas only for plotting
+- Produces time-series and comparative visualizations
+- **Artifact:** notebooks/Step7_Visualization.ipynb  
+
+## 12. Prerequisites
 - Python 3.10+
 - Apache Spark 3.x
 - Java 8 or 11
 - MongoDB Atlas account
 - Alpha Vantage API key
 
-### Steps to Reproduce
+## 13. Steps to Reproduce
 1. Clone the repository
 2. Create a `.env` file using `.env.example` as a template and provide:
    - MongoDB Atlas connection string
@@ -151,7 +214,7 @@ This project is fully reproducible without modifying any code.
 
 ---
 
-## 11. Project Video
+## 14. Project Video
 A short demonstration video illustrating the system architecture, data flow, and analytical outputs will be published on YouTube.
 
 *(Link to be added)*
