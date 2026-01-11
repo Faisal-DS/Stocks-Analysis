@@ -134,7 +134,6 @@ The mapping below explains **where each step is implemented and how it can be re
 
 ### Step 1: Project Scope and Big Data Framing
 - Defines the problem scope, dataset, and Big Data dimensions (volume and velocity)
-- Documents assumptions and exclusions (veracity)
 - **Artifact:** README.md (Project Overview, Big Data Challenges)
 
 ---
