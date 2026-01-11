@@ -217,9 +217,9 @@ The mapping below explains **where each step is implemented and how it can be re
 ---
 
 ## 14. Project Video
-A short demonstration video illustrating the system architecture, data flow, and analytical outputs will be published on YouTube.
+A short demonstration video illustrating the system architecture, data flow, and analytical outputs is published on YouTube.
 
-*(Link to be added)*
+*<Link>*
 
 ---
 
