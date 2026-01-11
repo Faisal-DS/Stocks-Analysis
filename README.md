@@ -7,6 +7,8 @@ The objective of the project is to design and implement an **end-to-end Big Data
 
 Rather than building financial trading or prediction models, the project demonstrates how modern Big Data technologies can be used to persistently store, process, and analyze continuously growing datasets in a reproducible and scalable manner.
 
+The approved poject proposal is included in docs/project_proposal.pdf for reference
+
 ---
 
 ## Quick Navigation
