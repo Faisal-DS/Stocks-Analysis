@@ -47,8 +47,6 @@ These assets were selected to provide diversity in market capitalization, volati
   - Incremental dataset growth  
   - Near-real-time data persistence  
 
-> Note: Intraday bar data (e.g., 5-minute intervals) is intentionally excluded to keep the focus on Big Data system design rather than high-frequency trading analysis.
-
 ---
 
 ## Time & Market Assumptions
