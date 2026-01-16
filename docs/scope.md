@@ -8,8 +8,6 @@ AAPL, MSFT, NVDA, AMZN, TSLA, APP, SMCI, SPY
 
 These assets were selected to provide diversity in market capitalization, volatility, and trading behavior while remaining manageable.
 
----
-
 ## Data Sources
 
 ### Historical Data (Batch Ingestion)
@@ -26,8 +24,6 @@ These assets were selected to provide diversity in market capitalization, volati
 - **Ingestion Pattern:** Periodic polling
 - **Rationale:**  
   Periodic quote ingestion simulates data velocity without introducing the operational complexity of a full streaming infrastructure.
-
----
 
 ## Datasets
 
@@ -47,14 +43,10 @@ These assets were selected to provide diversity in market capitalization, volati
   - Incremental dataset growth  
   - Near-real-time data persistence  
 
----
-
 ## Time & Market Assumptions
 - **Market:** U.S. equities (NYSE and NASDAQ)
 - **Timestamp Storage:**  
   All timestamps are normalized and stored in **UTC** to ensure consistency across ingestion, processing, and analytics stages.
-
----
 
 ## Big Data Dimensions (In Scope)
 
@@ -63,8 +55,6 @@ These assets were selected to provide diversity in market capitalization, volati
 
 - **Velocity:**  
   Periodic ingestion of near-real-time quote snapshots, simulating continuous data arrival and incremental dataset growth.
-
----
 
 ## Planned Outputs (Persisted to MongoDB)
 
@@ -84,8 +74,6 @@ The following datasets are produced and stored persistently:
   - `spark_monthly_returns`: Monthly aggregated returns  
 
 All outputs are written back to MongoDB Atlas to ensure reproducibility.
-
----
 
 ## Scale Statement
 The pipeline is designed to scale horizontally to:
