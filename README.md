@@ -9,15 +9,11 @@ Rather than building financial trading or prediction models, the project demonst
 
 The approved poject proposal is included in docs/project_proposal.pdf for reference.
 
----
-
 ## Quick Navigation
 - [Approved Project Proposal](docs/project_proposal.pdf)
 - [Project Scope and Dataset Plan](docs/scope.md)
 - [Data Model and Indexing Strategy](docs/data_model.md)
 - [Reproducibility Instructions](#10-reproducibility-instructions)
-
----
 
 ## 2. Big Data Challenges Addressed
 The project explicitly addresses the following Big Data dimensions:
@@ -27,8 +23,6 @@ The project explicitly addresses the following Big Data dimensions:
 
 - **Velocity**  
   Near-real-time market data is ingested periodically, simulating streaming-style data arrival and incremental dataset growth.
-
----
 
 ## 3. Dataset and Assumptions
 - **Asset Universe**:  
@@ -46,8 +40,6 @@ The project explicitly addresses the following Big Data dimensions:
 - **Assumptions**:
   - Data provided by external APIs is assumed to be structurally valid
   - The project does not attempt to validate or correct financial data quality (hence veracity dimension is not addressed)
-
----
 
 ## 4. System Architecture (Big Data Pipeline)
 The project follows a modular Big Data architecture:
@@ -67,8 +59,6 @@ The project follows a modular Big Data architecture:
 4. **Visualization**
    - Analytical outputs are visualized to illustrate trends, volatility, and technical indicators via Jupyter Notebooks
 
----
-
 ## 5. Data Model and Storage Design
 A MongoDB database named `Stocks` is used, with the following collections:
 
@@ -80,8 +70,6 @@ A MongoDB database named `Stocks` is used, with the following collections:
 
 Compound unique indexes on `(symbol, timestamp, interval)` ensure idempotent ingestion, prevent duplicates, and support efficient querying.
 
----
-
 ## 6. Data Ingestion and Validation
 - Historical daily data is ingested in batch mode
 - Near-real-time quote data is ingested periodically to demonstrate velocity handling
@@ -90,8 +78,6 @@ Compound unique indexes on `(symbol, timestamp, interval)` ensure idempotent ing
   - Consistent record counts across assets
   - No duplicate records
   - Financial sanity of stored values
-
----
 
 ## 7. Distributed Processing with Apache Spark
 Apache Spark is used to demonstrate distributed analytics on persistently stored data.
@@ -103,8 +89,6 @@ Spark performs:
 
 All Spark results are written back to MongoDB Atlas, ensuring reproducibility and avoiding transient, in-memory-only computation. Spark is used exclusively for scalable data processing and analytics, while visualization is treated as a downstream, non-Big-Data concern.
 
----
-
 ## 8. Analytics and Insights
 The pipeline enables analytics such as:
 - Risk vs. return comparison across assets
@@ -114,12 +98,8 @@ The pipeline enables analytics such as:
 
 These insights are derived from Big Data processing rather than ad-hoc, notebook-only analysis.
 
----
-
 ## 9. Proposal Alignment and Deviations
 The project remains aligned with the original proposal in terms of objectives and scope. Minor deviations include the use of alternative data sources for historical data due to API limitations. These changes were made to ensure reliable ingestion while preserving the Big Data focus of the project.
-
----
 
 ## 10. Reproducibility Instructions
 
@@ -136,16 +116,12 @@ The mapping below explains **where each step is implemented and how it can be re
 - Defines the problem scope, dataset, and Big Data dimensions (volume and velocity)
 - **Artifact:** README.md (Project Overview, Big Data Challenges)
 
----
-
 ### Step 2: Data Modeling and Persistent Storage Design
 - Designs the NoSQL data model and indexing strategy
 - Defines immutable raw ingestion and derived collections
 - **Artifacts:**  
   - README.md (Data Model and Storage Design)  
   - docs/data_model.md  
-
----
 
 ### Step 3: Data Ingestion
 - Implements batch ingestion of historical OHLCV data
@@ -154,15 +130,11 @@ The mapping below explains **where each step is implemented and how it can be re
 - Performs initial data validation
 - **Artifact:** notebooks/Step3_Ingestion.ipynb  
 
----
-
 ### Step 4: Data Validation
 - Validates record counts, date ranges, and duplicate prevention
 - Performs financial sanity checks on stored data
 - Implemented as part of the ingestion pipeline
 - **Artifact:** notebooks/Step3_Ingestion.ipynb (validation cells)
-
----
 
 ### Step 5: Feature Engineering
 - Computes derived features using MongoDB aggregation pipelines
@@ -170,16 +142,12 @@ The mapping below explains **where each step is implemented and how it can be re
 - Separates raw and derived data for reproducibility
 - **Artifact:** README.md (Feature Engineering section)
 
----
-
 ### Step 6: Distributed Processing with Apache Spark
 - Reads persisted MongoDB collections using Spark
 - Performs distributed joins and aggregations
 - Computes risk/return metrics and monthly returns
 - Writes results back to MongoDB Atlas
 - **Artifact:** notebooks/Step6_Distributed_Analytics.ipynb  
-
----
 
 ### Step 7: Visualization
 - Loads Spark-generated outputs for analysis
@@ -199,39 +167,37 @@ The mapping below explains **where each step is implemented and how it can be re
    ```bash
    git clone https://github.com/Faisal-DS/Stocks-Analysis.git
    cd Stocks-Analysis
-Create a .env file using .env.example as a template and provide:
+2. Create a .env file using .env.example as a template and provide:
 
 MongoDB Atlas connection string
 
 Alpha Vantage API key
 
-Install dependencies:
+3. Install dependencies:
 
 bash
 Copy code
 pip install -r requirements.txt
-Execute the notebooks in the following order:
 
-notebooks/Step3_Ingestion.ipynb
+4. Execute the notebooks in the following order:
+
+**notebooks/Step3_Ingestion.ipynb**
 Batch and velocity data ingestion with idempotent writes to MongoDB Atlas
 
-notebooks/Step6_Distributed_Analytics.ipynb
+**notebooks/Step6_Distributed_Analytics.ipynb**
 Distributed analytics using Apache Spark on persisted datasets
 
-notebooks/Step7_Visualization.ipynb
+**notebooks/Step7_Visualization.ipynb**
 Visualization of persisted analytics results (read-only visualization layer)
 
 No code modifications are required.
-All analytical results are persisted to MongoDB Atlas and can be reproduced by re-running the notebooks.
 
----
 
 ## 14. Project Video
 A short demonstration video illustrating the system architecture, data flow, and analytical outputs is published on YouTube.
 
 *https://youtu.be/BeEqkwsvMkA*
 
----
 
 ## Repository
 https://github.com/Faisal-DS/Stocks-Analysis
