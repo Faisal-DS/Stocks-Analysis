@@ -195,24 +195,34 @@ The mapping below explains **where each step is implemented and how it can be re
 - Alpha Vantage API key
 
 ## 13. Steps to Reproduce
-1. Clone the repository
-2. Create a `.env` file using `.env.example` as a template and provide:
-   - MongoDB Atlas connection string
-   - Alpha Vantage API key
-3. Install dependencies:
+1. Clone the repository:
    ```bash
-   pip install -r requirements.txt
+   git clone https://github.com/Faisal-DS/Stocks-Analysis.git
+   cd Stocks-Analysis
+Create a .env file using .env.example as a template and provide:
 
+MongoDB Atlas connection string
 
-### Notebooks
-- **Step3_Ingestion.ipynb**  
-  Batch and velocity data ingestion with idempotent writes to MongoDB Atlas
+Alpha Vantage API key
 
-- **Step6_Distributed_Analytics.ipynb**  
-  Distributed analytics using Apache Spark on persisted datasets
+Install dependencies:
 
-- **Step7_Visualization.ipynb**  
-  Visualization of persisted analytics results (read-only, visualization layer)
+bash
+Copy code
+pip install -r requirements.txt
+Execute the notebooks in the following order:
+
+notebooks/Step3_Ingestion.ipynb
+Batch and velocity data ingestion with idempotent writes to MongoDB Atlas
+
+notebooks/Step6_Distributed_Analytics.ipynb
+Distributed analytics using Apache Spark on persisted datasets
+
+notebooks/Step7_Visualization.ipynb
+Visualization of persisted analytics results (read-only visualization layer)
+
+No code modifications are required.
+All analytical results are persisted to MongoDB Atlas and can be reproduced by re-running the notebooks.
 
 ---
 
